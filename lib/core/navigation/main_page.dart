@@ -3,6 +3,7 @@ import 'package:drilling_app/core/navigation/navigation_state.dart';
 import 'package:drilling_app/features/homepage/presentation/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -28,9 +29,7 @@ class _MainPageState extends State<MainPage>
         return Scaffold(
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-
-
-              
+              context.pushNamed('drilling');
             },
             child: Icon(Icons.add),
           ),
