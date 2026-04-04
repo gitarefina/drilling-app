@@ -15,18 +15,20 @@ class _DrillingPageState extends State<DrillingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          CustomTextField(controller: holeIdController, hintText: "Hole ID"),
-          CustomButton(text: "Accelerometer", onPressed: () {}),
-          CustomButton(text: "Gyroscope", onPressed: () {}),
-          CustomButton(text: "Take A Picture", onPressed: () {}),
-          CustomButton(text: "Take A Picture", onPressed: () {}),
-          Spacer(),
-          CustomButton(text: "Save As Draft", onPressed: () {}),
-          CustomButton(text: "Submit", onPressed: () {}),
-        ],
+    return Scaffold(
+      body: Container(
+        child: Column(
+          children: [
+            CustomTextField(controller: holeIdController, hintText: "Hole ID"),
+            CustomButton(text: "Accelerometer", onPressed: () {}),
+            CustomButton(text: "Gyroscope", onPressed: () {}),
+            CustomButton(text: "Take A Picture", onPressed: () {}),
+            CustomButton(text: "Take A Picture", onPressed: () {}),
+            Spacer(),
+            CustomButton(text: "Save As Draft", onPressed: () {}),
+            CustomButton(text: "Submit", onPressed: () {}),
+          ],
+        ),
       ),
     );
   }
