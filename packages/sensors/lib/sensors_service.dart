@@ -2,16 +2,26 @@ import 'package:sensors_plus/sensors_plus.dart';
 
 class SensorsService {
   final Stream<AccelerometerEvent> _accelerometerStream;
+  final Stream<GyroscopeEvent> _gyroscopeStream;
 
-  double accelerometer_x = 0, accelerometer_y = 0, accelerometer_z = 0;
-  SensorsService({Stream<AccelerometerEvent>? accelerometerStream})
-    : _accelerometerStream = accelerometerStream ?? accelerometerEvents;
+  List<double> accelerometer = [0, 0, 0]; // [x, y, z]
+  List<double> gyroscope = [0, 0, 0];     // [x, y, z]
+
+  SensorsService({
+    Stream<AccelerometerEvent>? accelerometerStream,
+    Stream<GyroscopeEvent>? gyroscopeStream,
+  })  : _accelerometerStream = accelerometerStream ?? accelerometerEvents,
+        _gyroscopeStream = gyroscopeStream ?? gyroscopeEvents;
 
   void startSensors() {
     _accelerometerStream.listen((event) {
-      accelerometer_x = event.x;
-      accelerometer_y = event.y;
-      accelerometer_z = event.z;
+      accelerometer = [event.x, event.y, event.z];
+      print("Accelerometer: $accelerometer");
+    });
+
+    _gyroscopeStream.listen((event) {
+      gyroscope = [event.x, event.y, event.z];
+      print("Gyroscope: $gyroscope");
     });
   }
 }

@@ -5,16 +5,18 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final String? labelText;
+  final bool? isEditable;
   const CustomTextField({
     super.key,
     required this.controller,
     required this.hintText,
-    this.labelText,
+    this.labelText,  this.isEditable,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      
       controller: controller,
       decoration: InputDecoration(
         labelText: labelText,

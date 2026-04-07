@@ -44,20 +44,20 @@ class DrillingFields {
 class DrillingModel {
   final int? id;
   final String hole_id;
-  final Map<String, dynamic>? accelerometerData;
-  final Map<String, dynamic>? gyroscopeData;
+  final String? accelerometerData;
+  final String? gyroscopeData;
   final DateTime created_time;
   final String? picturePath;
-  final ProgressStatus progressStatus;
-  final WorkflowStatus workflowStatus;
+  final String progressStatus;
+  final String workflowStatus;
 
   DrillingModel({
-    this.id,
+    required this.id,
     required this.hole_id,
-    this.accelerometerData,
-    this.gyroscopeData,
+    required this.accelerometerData,
+    required this.gyroscopeData,
     required this.created_time,
-    this.picturePath,
+    required this.picturePath,
     required this.progressStatus,
     required this.workflowStatus,
   });
@@ -68,13 +68,12 @@ class DrillingModel {
       DrillingFields.id: id,
       DrillingFields.holeId: hole_id,
       DrillingFields.accelerometer:
-          accelerometerData != null ? jsonEncode(accelerometerData) : null,
-      DrillingFields.gyroscope:
-          gyroscopeData != null ? jsonEncode(gyroscopeData) : null,
+         accelerometerData,
+      DrillingFields.gyroscope:gyroscopeData,
       DrillingFields.createdTime: created_time.toIso8601String(),
       DrillingFields.picture: picturePath,
-      DrillingFields.statusProgress: progressStatus.value, // ✅ pakai value
-      DrillingFields.statusWorkflow: workflowStatus.value, // ✅ pakai value
+      DrillingFields.statusProgress: progressStatus, // ✅ pakai value
+      DrillingFields.statusWorkflow: workflowStatus, // ✅ pakai value
     };
   }
 
@@ -83,23 +82,15 @@ class DrillingModel {
     return DrillingModel(
       id: map[DrillingFields.id],
       hole_id: map[DrillingFields.holeId],
-      accelerometerData: map[DrillingFields.accelerometer] != null
-          ? jsonDecode(map[DrillingFields.accelerometer])
-          : null,
-      gyroscopeData: map[DrillingFields.gyroscope] != null
-          ? jsonDecode(map[DrillingFields.gyroscope])
-          : null,
+      accelerometerData: map[DrillingFields.accelerometer] ,
+      gyroscopeData: map[DrillingFields.gyroscope] ,
       created_time: DateTime.parse(map[DrillingFields.createdTime]),
       picturePath: map[DrillingFields.picture],
 
       // 🔥 convert dari VALUE (COMPLETE, NOT_COMPLETE)
-      progressStatus: ProgressStatus.values.firstWhere(
-        (e) => e.value == map[DrillingFields.statusProgress],
-      ),
+      progressStatus: map[DrillingFields.statusProgress],
 
-      workflowStatus: WorkflowStatus.values.firstWhere(
-        (e) => e.value == map[DrillingFields.statusWorkflow],
-      ),
+      workflowStatus: map[DrillingFields.statusWorkflow],
     );
   }
 }

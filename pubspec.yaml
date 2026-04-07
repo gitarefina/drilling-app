@@ -34,6 +34,10 @@ dependencies:
     path: packages/drilling_activity_repository
   homepage: 
     path: packages/drilling_history_repository
+  camera_service: 
+    path: packages/camera_service
+  sensors: 
+    path: packages/sensors
   core: 
     path: packages/core
 

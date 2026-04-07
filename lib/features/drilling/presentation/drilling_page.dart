@@ -1,11 +1,17 @@
+import 'dart:math';
+
 import 'package:core/database/drilling_model.dart';
 import 'package:drilling_app/core/helper/custom_button.dart';
+import 'package:drilling_app/core/helper/custom_dropdown.dart';
+import 'package:drilling_app/core/helper/custom_picture_button.dart';
 import 'package:drilling_app/core/helper/custom_text_field.dart';
 import 'package:drilling_app/features/drilling/bloc/drilling_bloc.dart';
 import 'package:drilling_app/features/drilling/bloc/drilling_event.dart';
+import 'package:drilling_app/features/drilling/bloc/drilling_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sensors/sensors_service.dart';
 
 class DrillingPage extends StatefulWidget {
   const DrillingPage({super.key});
@@ -16,26 +22,184 @@ class DrillingPage extends StatefulWidget {
 
 class _DrillingPageState extends State<DrillingPage> {
   final TextEditingController holeIdController = TextEditingController();
+  ProgressStatus? selectedProgress;
+  WorkflowStatus? selectedWorkflow;
+  bool isLoadingAccelerometer = false;
+  bool isLoadingGyroscope = false;
+  bool isLoadingPicture = false;
+  String? picturePath;
+  String accelerometerData = "";
+  String gyroscopeData = "";
+  final sensorService = SensorsService();
 
+// Later, after some time:
   @override
   Widget build(BuildContext context) {
+    
+    final progressItems = ProgressStatus.values.map((status) {
+      return DropdownMenuItem<ProgressStatus>(
+        value: status,
+        child: Text(status.value),
+      );
+    }).toList();
+
+    final workflowItems = WorkflowStatus.values.map((status) {
+      return DropdownMenuItem<WorkflowStatus>(
+        value: status,
+        child: Text(status.value),
+      );
+    }).toList();
     return Scaffold(
-      body: Container(
-        child: Column(
-          children: [
-            CustomTextField(controller: holeIdController, hintText: "Hole ID"),
-            CustomButton(text: "Accelerometer", onPressed: () {}),
-            CustomButton(text: "Gyroscope", onPressed: () {}),
-            CustomButton(text: "Take A Picture", onPressed: () {}),
-            CustomButton(text: "Take A Picture", onPressed: () {}),
-            Spacer(),
-            CustomButton(text: "Save As Draft", onPressed: () {}),
-            CustomButton(text: "Submit", onPressed: () {
-              context.read<DrillingBloc>().add(insertDrilling(DrillingModel(hole_id: "hole_id", created_time: DateTime.now(), progressStatus: ProgressStatus.completed, workflowStatus: WorkflowStatus.submitted)));
-            
-            }),
-          ],
-        ),
+      body: BlocConsumer<DrillingBloc, DrillingState>(
+        builder: (context, state) {
+          return Container(
+            child: Column(
+              children: [
+                CustomTextField(
+                  controller: holeIdController,
+                  hintText: "Hole ID",
+                ),
+
+                Text(accelerometerData),
+                CustomButton(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  text: "Accelerometer",
+                  onPressed: () {
+                    setState(() {
+                      sensorService.startSensors();
+                      if (isLoadingAccelerometer == true) {
+                        accelerometerData = sensorService.accelerometer.join(", ");
+                      } else {
+                        accelerometerData = "";
+                      }
+                      isLoadingAccelerometer = !isLoadingAccelerometer;
+                    });
+                  },
+                  isLoading: isLoadingAccelerometer,
+                ),
+
+                
+                CustomButton(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  text: "Gyroscope",
+                  onPressed: () {
+                    setState(() {
+                      if (isLoadingGyroscope == true) {
+                        gyroscopeData = sensorService.gyroscope.join(", ");
+                       } else {
+                        gyroscopeData = "";
+                      }
+
+                      isLoadingGyroscope = !isLoadingGyroscope;
+                    });
+                  },
+                  isLoading: isLoadingGyroscope,
+                ),
+                picturePath != null
+                    ? Text(picturePath ?? "")
+                    : CustomPictureButton(
+                        text: "Take A Picture",
+                        onPictureTaken: (path) {
+                          setState(() {
+                            picturePath = path;
+                          });
+                          print("Gambar disimpan di: $path");
+                        },
+                      ),
+
+                CustomDropdown<ProgressStatus>(
+                  value: selectedProgress,
+                  items: progressItems,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedProgress = value;
+                    });
+                  },
+                  hintText: "Pilih Progress Status",
+                ),
+                CustomDropdown<WorkflowStatus>(
+                  value: selectedWorkflow,
+                  items: workflowItems,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedWorkflow = value;
+                    });
+                  },
+                  hintText: "Pilih Workflow Status",
+                ),
+
+                Spacer(),
+                CustomButton(
+                  text: "Save As Draft",
+                  onPressed: () {
+                    onPressed:
+                    () {
+                      context.read<DrillingBloc>().add(
+                        InsertDrilling(
+                          DrillingModel(
+                            hole_id: holeIdController.text,
+                            created_time: DateTime.now(),
+                            progressStatus:
+                                selectedProgress?.value ??
+                                ProgressStatus.incompleted.value,
+                            workflowStatus:
+                                selectedWorkflow?.value ??
+                                WorkflowStatus.draft.value,
+                            id: Random().nextInt(10000),
+                            accelerometerData: "4",
+                            gyroscopeData: "5",
+                            picturePath: "6",
+                          ),
+                        ),
+                      );
+                      print("masuk ga datanya");
+                    };
+                  },
+                ),
+                CustomButton(
+                  text: "Submit",
+                  onPressed: () {
+                    context.read<DrillingBloc>().add(
+                      InsertDrilling(
+                        DrillingModel(
+                          hole_id: Random().nextInt(10000).toString(),
+                          created_time: DateTime.now(),
+                          progressStatus:
+                              selectedProgress?.value ??
+                              ProgressStatus.incompleted.value,
+                          workflowStatus:
+                              selectedWorkflow?.value ??
+                              WorkflowStatus.draft.value,
+                          id: Random().nextInt(10000),
+                          accelerometerData: "4",
+                          gyroscopeData: "5",
+                          picturePath: "6",
+                        ),
+                      ),
+                    );
+                    print("masuk ga datanya");
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+        listener: (context, state) {
+          print("masuk listener");
+          if (state.status == DrillingStatus.error) {
+            print(state.message);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message ?? "Data gagal disimpan")),
+            );
+          } else {
+            print(state.message);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message ?? "Data berhasil disimpan"),
+              ),
+            );
+          }
+        },
       ),
     );
   }
