@@ -193,7 +193,7 @@ class _DrillingPageState extends State<DrillingPage> {
                     context.read<DrillingBloc>().add(
                       InsertDrilling(
                         DrillingModel(
-                          hole_id: Random().nextInt(10000).toString(),
+                          hole_id: holeIdController.text,
                           created_time: DateTime.now(),
                           progressStatus:
                               selectedProgress?.value ??
