@@ -175,12 +175,11 @@ class _DrillingPageState extends State<DrillingPage> {
                                 selectedProgress?.value ??
                                 ProgressStatus.incompleted.value,
                             workflowStatus:
-                                selectedWorkflow?.value ??
                                 WorkflowStatus.draft.value,
                             id: Random().nextInt(10000),
-                            accelerometerData: "4",
-                            gyroscopeData: "5",
-                            picturePath: "6",
+                            accelerometerData: accelerometerData,
+                            gyroscopeData: gyroscopeData,
+                            picturePath: picturePath ?? "",
                           ),
                         ),
                       );
@@ -200,12 +199,11 @@ class _DrillingPageState extends State<DrillingPage> {
                               selectedProgress?.value ??
                               ProgressStatus.incompleted.value,
                           workflowStatus:
-                              selectedWorkflow?.value ??
-                              WorkflowStatus.draft.value,
+                              WorkflowStatus.submitted.value,
                           id: Random().nextInt(10000),
-                          accelerometerData: "4",
-                          gyroscopeData: "5",
-                          picturePath: "6",
+                          accelerometerData: accelerometerData,
+                          gyroscopeData: gyroscopeData,
+                          picturePath: picturePath ?? "",
                         ),
                       ),
                     );
