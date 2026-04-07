@@ -30,28 +30,32 @@ class _HomePageDraftState extends State<HomePageDraft>
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeBlocDraft,HomeStateDraft>(builder:(context, state) {
-      if(state.status == HomeStatusDraft.success){
-        return ListView.builder(
-          itemCount: state.model?.length,
-          itemBuilder: (context,index){
-            return Card(
-              child: ListTile(
- leading: state.model?[index].picturePath != null
-                    ? Image.asset(state.model?[index].picturePath ?? "")
-                    : Text("Hole ID = ${state.model?[index].hole_id ?? ""}"),                title: Text(state.model?[index].hole_id ?? ""),
-                subtitle: Text("accelerometer = ${state.model?[index].accelerometerData.toString() ?? ""}, gyroscope = ${state.model?[index].gyroscopeData.toString() ?? ""}"),
-                trailing: Text(state.model?[index].workflowStatus ?? ""),
-              ),
-            );
-
-          },);
-      }
-      return Container();
-
-    }, listener:(context, state) {
-      print(" masuk ke listener");
-      
-    },);
+    return BlocConsumer<HomeBlocDraft, HomeStateDraft>(
+      builder: (context, state) {
+        if (state.status == HomeStatusDraft.success) {
+          return ListView.builder(
+            itemCount: state.model?.length,
+            itemBuilder: (context, index) {
+              return Card(
+                child: ListTile(
+                  leading: state.model?[index].picturePath != null
+                      ? Image.asset(state.model?[index].picturePath ?? "")
+                      : Text("Hole ID = ${state.model?[index].hole_id ?? ""}"),
+                  title: Text(state.model?[index].hole_id ?? ""),
+                  subtitle: Text(
+                    "   accelerometer = ${state.model?[index].accelerometerData.toString() ?? ""}, gyroscope = ${state.model?[index].gyroscopeData.toString() ?? ""}",
+                  ),
+                  trailing: Text(state.model?[index].workflowStatus ?? ""),
+                ),
+              );
+            },
+          );
+        }
+        return Container();
+      },
+      listener: (context, state) {
+        print(" masuk ke listener");
+      },
+    );
   }
 }
