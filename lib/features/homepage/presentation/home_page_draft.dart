@@ -37,9 +37,10 @@ class _HomePageDraftState extends State<HomePageDraft>
           itemBuilder: (context,index){
             return Card(
               child: ListTile(
-                leading: Text(state.model?[index].id.toString() ?? ""),
-                title: Text(state.model?[index].hole_id ?? ""),
-                subtitle: Text(state.model?[index].created_time.toString() ?? ""),
+ leading: state.model?[index].picturePath != null
+                    ? Image.asset(state.model?[index].picturePath ?? "")
+                    : Text("Hole ID = ${state.model?[index].hole_id ?? ""}"),                title: Text(state.model?[index].hole_id ?? ""),
+                subtitle: Text("accelerometer = ${state.model?[index].accelerometerData.toString() ?? ""}, gyroscope = ${state.model?[index].gyroscopeData.toString() ?? ""}"),
                 trailing: Text(state.model?[index].workflowStatus ?? ""),
               ),
             );

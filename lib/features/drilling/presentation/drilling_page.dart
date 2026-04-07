@@ -32,10 +32,23 @@ class _DrillingPageState extends State<DrillingPage> {
   String gyroscopeData = "";
   final sensorService = SensorsService();
 
-// Later, after some time:
+
+   final SensorsService sensorsService = SensorsService();
+
+  @override
+  void initState() {
+    super.initState();
+    sensorService.startSensors();
+  }
+
+  String formatXYZ(List<double> xyz) =>
+      "X: ${xyz[0].toStringAsFixed(2)}, "
+      "Y: ${xyz[1].toStringAsFixed(2)}, "
+      "Z: ${xyz[2].toStringAsFixed(2)}";
+
+  // Later, after some time:
   @override
   Widget build(BuildContext context) {
-    
     final progressItems = ProgressStatus.values.map((status) {
       return DropdownMenuItem<ProgressStatus>(
         value: status,
@@ -60,7 +73,17 @@ class _DrillingPageState extends State<DrillingPage> {
                   hintText: "Hole ID",
                 ),
 
-                Text(accelerometerData),
+                const Text(
+                  "Accelerometer Data",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                ValueListenableBuilder<List<double>>(
+                  valueListenable: sensorService.accelerometer,
+                  builder: (context, value, child) {
+
+                    return isLoadingAccelerometer ? Text(formatXYZ (value)) : Text("");
+                  },
+                ),
                 CustomButton(
                   width: MediaQuery.of(context).size.width * 0.5,
                   text: "Accelerometer",
@@ -68,7 +91,7 @@ class _DrillingPageState extends State<DrillingPage> {
                     setState(() {
                       sensorService.startSensors();
                       if (isLoadingAccelerometer == true) {
-                        accelerometerData = sensorService.accelerometer.join(", ");
+                        accelerometerData = "";
                       } else {
                         accelerometerData = "";
                       }
@@ -77,16 +100,25 @@ class _DrillingPageState extends State<DrillingPage> {
                   },
                   isLoading: isLoadingAccelerometer,
                 ),
+                 Text(
+                  "Gyroscope Data",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                ValueListenableBuilder<List<double>>(
+                  valueListenable: sensorService.gyroscope,
+                  builder: (context, value, child) {
+                    return isLoadingGyroscope ? Text(formatXYZ (value)) : Text("");
+                  },
+                ),  
 
-                
                 CustomButton(
                   width: MediaQuery.of(context).size.width * 0.5,
                   text: "Gyroscope",
                   onPressed: () {
                     setState(() {
                       if (isLoadingGyroscope == true) {
-                        gyroscopeData = sensorService.gyroscope.join(", ");
-                       } else {
+                        gyroscopeData = "";
+                      } else {
                         gyroscopeData = "";
                       }
 
