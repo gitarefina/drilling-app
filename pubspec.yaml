@@ -31,9 +31,11 @@ dependencies:
   flutter:
     sdk: flutter
   activity:
-    path: packages/activity_repository
+    path: packages/drilling_activity_repository
   homepage: 
-    path: packages/homepage_repository
+    path: packages/drilling_history_repository
+  core: 
+    path: packages/core
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -42,6 +44,9 @@ dependencies:
   flutter_bloc: ^9.1.1
   equatable: ^2.0.8
   go_router: ^17.2.0
+  flutter_screenutil: ^5.9.3
+  get_it: ^9.2.1
+  sqflite: ^2.4.2
 
 dev_dependencies:
   flutter_test:
